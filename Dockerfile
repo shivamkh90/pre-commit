@@ -1,6 +1,7 @@
-FROM alpine:3.13
+FROM golang:alpine3.13
 
 ENV TERRAFORM_VERSION=0.15.0
+ENV TERRAGRUNT_VERSION=v0.29.0
 ENV TFLINT_VERSION=v0.27.0
 
 VOLUME ["/data"]
@@ -20,6 +21,9 @@ RUN apk update && \
     unzip -u /tmp/tflint.zip -d /tmp/ && \
     mkdir -p /usr/local/bin && \
     install -b -c -v /tmp/tflint /usr/local/bin/ && \
+    curl -L -o /usr/local/bin/terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 && \
+    chmod +x /usr/local/bin/terragrunt && \
+    go get golang.org/x/tools/cmd/goimports && \
     rm -rf /tmp/* && \
     rm -rf /var/cache/apk/* && \
     rm -rf /var/tmp/*
@@ -27,10 +31,3 @@ RUN apk update && \
 COPY ./hooks ./hooks
 
 RUN chmod +x ./hooks/*
-
-#ENV PATH = $PATH:/usr/local/google-cloud-sdk/bin/
-
-ARG VCS_REF
-
-#LABEL org.label-schema.vcs-ref=$VCS_REF \
-#    org.label-schema.vcs-url="https://github.com/broadinstitute/docker-terraform"
