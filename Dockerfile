@@ -24,7 +24,7 @@ RUN apk update && \
     rm -rf /var/cache/apk/* && \
     rm -rf /var/tmp/*
 
-COPY ./hooks .
+COPY ./hooks ./hooks
 
 RUN chmod +x ./hooks/*
 
